@@ -19,4 +19,4 @@ echo '##########################################'
 echo '#####   Starting Cat-DB Container   ######'
 echo '##########################################'
 
-docker run -dit --name cat-database -p 80:8080 -e DB_HOST=172.17.0.1 -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped cat-database
+docker run -dit --name cat-database -p 80:80 -e DB_HOST=172.17.0.1 -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped cat-database

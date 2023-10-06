@@ -195,4 +195,4 @@ app.delete("/:id", async (req, res) => {
     res.send();
 })
 
-app.listen(8080, () => console.log("listening..."))
+app.listen(80, () => console.log("listening..."))

@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm install
 COPY --chown=node:node . .
 USER node
-EXPOSE 8080
+EXPOSE 80
 ENV DB_HOST 172.17.0.1
 ENV DB_USER root
 ENV DB_PASSWORD root

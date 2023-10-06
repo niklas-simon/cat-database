@@ -23,7 +23,7 @@ docker build -t cat-database .
 
 ## Docker Run Command
 ```
-docker run -dit --name cat-database -p 80:8080 -e DB_HOST=172.17.0.1 -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped cat-database
+docker run -dit --name cat-database -p 80:80 -e DB_HOST=172.17.0.1 -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped cat-database
 ```
 > [!WARNING]  
 > Please note that for security reasons, you should never use sensitive data inside a command
