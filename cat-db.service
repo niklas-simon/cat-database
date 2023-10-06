@@ -6,7 +6,7 @@ After=network.target
 [Service]
 Type=simple
 User=node
-ExecStart=/usr/bin/node /home/node/cat-database/index.js
+ExecStart=/usr/bin/node /home/node/cat-database/index.js 2>&1 /var/log/cat-db.log
 Restart=on-failure
 
 [Install]
