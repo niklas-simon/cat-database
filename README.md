@@ -27,3 +27,8 @@ docker run -dit --name cat-database -p 80:80 -e DB_HOST=172.17.0.1 -e DB_USER=ro
 ```
 > [!WARNING]  
 > Please note that for security reasons, you should never use sensitive data inside a command
+
+## Installation without Docker
+```
+wget -qO- https://raw.githubusercontent.com/niklas-simon/cat-database/main/dockerless.sh | sudo sh
+```
