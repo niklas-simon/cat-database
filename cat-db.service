@@ -1,0 +1,12 @@
+[Unit]
+Description=Cat-DB - a place for your cat images
+After=network.target
+
+[Service]
+Type=simple
+User=node
+ExecStart=/usr/bin/node /home/node/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
