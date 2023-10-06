@@ -5,8 +5,10 @@ After=network.target
 [Service]
 Type=simple
 User=node
-ExecStart=/snap/bin/node /home/node/cat-database/index.js 2>&1 /var/log/cat-db.log
+ExecStart=/snap/bin/node /home/node/cat-database/index.js
 Restart=on-failure
+StandardOutput=append:/var/log/cat-db/default.log
+StandardError=append:/var/log/cat-db/error.log
 
 [Install]
 WantedBy=multi-user.target
