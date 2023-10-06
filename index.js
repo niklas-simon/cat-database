@@ -60,7 +60,7 @@ app.get("/", async (req, res) => {
     `);
 })
 
-const getCat = async id => (await connection.query(`select * from cats where id = ${connection.escape(id)}`))[0]?.[0]
+const getCat = async id => (await connection.query(`select * from cats where id = ${connection.escape(id)}`))[0]?.[0];
 
 const notFound = () => `
     <!DOCTYPE html>
