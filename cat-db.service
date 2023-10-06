@@ -9,6 +9,7 @@ ExecStart=/snap/bin/node /home/node/cat-database/index.js
 Restart=on-failure
 StandardOutput=append:/var/log/cat-db/default.log
 StandardError=append:/var/log/cat-db/error.log
+WorkingDirectory=/home/node/cat-database
 
 [Install]
 WantedBy=multi-user.target
