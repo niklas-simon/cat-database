@@ -4,12 +4,12 @@ After=network.target
 
 [Service]
 Type=simple
-User=node
-ExecStart=/snap/bin/node /home/node/cat-database/index.js
+User=root
+ExecStart=/snap/bin/node /etc/cat-database/index.js
 Restart=on-failure
 StandardOutput=append:/var/log/cat-db/default.log
 StandardError=append:/var/log/cat-db/error.log
-WorkingDirectory=/home/node/cat-database
+WorkingDirectory=/etc/cat-database
 
 [Install]
 WantedBy=multi-user.target
