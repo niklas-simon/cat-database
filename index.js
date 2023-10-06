@@ -72,7 +72,7 @@ const notFound = () => `
     </html>
 `
 
-const upload = multer({dest: __dirname + "/images/"})
+const upload = multer({dest: "images/"})
 app.post("/", upload.single("image"), async (req, res) => {
     req.body.id = Number(req.body.id);
     const cat = req.body.id ? await getCat(req.body.id) : {name: "", description: "", image: null};
