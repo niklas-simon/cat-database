@@ -4,7 +4,7 @@ A simple nodejs server giving access to a database containing images of cats.
 ## Environment Variables
 Key         | Description                         | Default
 ------------|-------------------------------------|----------
-DB_HOST     | Hostname of DB-Server to connect to | 172.17.0.1
+DB_HOST     | Hostname of DB-Server to connect to | mysql
 DB_USER     | Username of DB-Server to use        | root
 DB_PASSWORD | Password for User                   | root
 DB_NAME     | Name of Database to use             | cats
