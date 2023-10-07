@@ -43,4 +43,3 @@ cp cat-db.service /etc/systemd/system
 systemctl daemon-reload
 systemctl enable cat-db
 systemctl start cat-db
-
