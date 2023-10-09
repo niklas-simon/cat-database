@@ -36,5 +36,5 @@ docker run -dit --name cat-db -p 80:80 -e DB_HOST=mysql -e DB_USER=root -e DB_PA
 ## Installation without Docker
 I don't know why you'd want to do this, but here you go!
 ```
-curl -o- https://raw.githubusercontent.com/niklas-simon/cat-database/main/dockerless.sh | sudo sh
+wget -qO- https://raw.githubusercontent.com/niklas-simon/cat-database/main/dockerless.sh | sudo sh
 ```
