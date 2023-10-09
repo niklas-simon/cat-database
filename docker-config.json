@@ -1,0 +1,9 @@
+{
+    "proxies": {
+      "default": {
+        "httpProxy": "{httpProxy}",
+        "httpsProxy": "{httpsProxy}",
+        "noProxy": "127.0.0.0/8"
+      }
+    }
+}
