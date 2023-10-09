@@ -9,6 +9,11 @@ DB_USER     | Username of DB-Server to use        | root
 DB_PASSWORD | Password for User                   | root
 DB_NAME     | Name of Database to use             | cats
 
+## Docker Installation
+```
+wget -qO- https://raw.githubusercontent.com/niklas-simon/cat-database/main/docker-install.sh | sudo sh
+```
+
 ## Network Setup
 ```
 docker network create cat-net
