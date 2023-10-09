@@ -32,7 +32,7 @@ if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     wget https://raw.githubusercontent.com/niklas-simon/cat-database/main/docker-config.json
     sed s,{httpProxy},$(echo $http_proxy),g docker-config.json > config-1.json
     sed s,{httpsProxy},$(echo $https_proxy),g config-1.json > config.json
-    cp config.json /etc/docker
+    cp config.json /etc/docker/config.json
     rm docker-config.json
     rm config-1.json
     rm config.json
