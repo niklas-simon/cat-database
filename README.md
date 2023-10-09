@@ -11,7 +11,7 @@ DB_NAME     | Name of Database to use             | cats
 
 ## Docker Installation
 ```
-wget -qO- https://raw.githubusercontent.com/niklas-simon/cat-database/main/docker-install.sh | sudo sh
+wget -qO- https://raw.githubusercontent.com/niklas-simon/cat-database/main/docker-install.sh | sudo bash
 ```
 
 ## Network Setup
