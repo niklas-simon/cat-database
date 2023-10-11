@@ -28,9 +28,9 @@ echo '###############################################'
 echo '#####     Configuring non-root Access     #####'
 echo '###############################################'
 
-echo user: $USER
+echo user: $(who am i | awk '{print $1}')
 getent group docker || groupadd docker
-usermod -aG docker $USER
+usermod -aG docker $(who am i | awk '{print $1}')
 newgrp docker
 
 if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
