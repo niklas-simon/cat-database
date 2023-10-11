@@ -28,8 +28,10 @@ echo '###############################################'
 echo '#####     Configuring non-root Access     #####'
 echo '###############################################'
 
-groupadd docker
+echo user: $USER
+getent group docker || groupadd docker
 usermod -aG docker $USER
+newgrp docker
 
 if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     echo '###############################################'
