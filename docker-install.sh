@@ -28,7 +28,7 @@ echo '###############################################'
 echo '#####     Configuring non-root Access     #####'
 echo '###############################################'
 
-echo user: $(who am i | awk '{print $1}')
+who am i
 getent group docker || groupadd docker
 usermod -aG docker $(who am i | awk '{print $1}')
 newgrp docker
