@@ -44,4 +44,6 @@ if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     cp http-proxy.conf /etc/systemd/system/docker.service.d/http-proxy.conf
     rm http-proxy.conf
     rm http-proxy-1.conf
+    systemctl daemon-reload
+    systemctl restart docker
 fi
