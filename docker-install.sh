@@ -3,7 +3,7 @@ echo '#####    Add Docker''s official GPG key    #####'
 echo '###############################################'
 
 apt-get update
-apt-get install -y ca-certificates curl gnupg
+apt-get install -y ca-certificates curl gnupg uidmap
 install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 chmod a+r /etc/apt/keyrings/docker.gpg
@@ -32,8 +32,8 @@ if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     wget https://raw.githubusercontent.com/niklas-simon/cat-database/main/docker-config.json
     sed s,{httpProxy},$(echo $http_proxy),g docker-config.json > config-1.json
     sed s,{httpsProxy},$(echo $https_proxy),g config-1.json > config.json
-    mkdir -p ~./.docker
-    cp config.json ~./.docker/config.json
+    runuser -u $SUDO_USER -- mkdir -p $HOME/.docker
+    runuser -u $SUDO_USER -- cp config.json $HOME/.docker/config.json
     rm docker-config.json
     rm config-1.json
     rm config.json
@@ -49,4 +49,8 @@ if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     systemctl restart docker
 fi
 
-echo "to get non-root access, run 'sh /usr/bin/dockerd-rootless-setuptool.sh install' as a non-root user"
+echo '###############################################'
+echo '#####      Configure non-root Access      #####'
+echo '###############################################'
+
+runuser -u $SUDO_USER -- sh /usr/bin/dockerd-rootless-setuptool.sh install
