@@ -39,4 +39,4 @@ echo '###############################################'
 echo '#####      Configure non-root Access      #####'
 echo '###############################################'
 
-wget -qO- https://raw.githubusercontent.com/docker/docker-install/master/rootless-install.sh | sh
+runuser -u $SUDO_USER -- wget -qO- https://raw.githubusercontent.com/docker/docker-install/master/rootless-install.sh | sh
