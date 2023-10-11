@@ -24,14 +24,6 @@ echo '###############################################'
 
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-echo '###############################################'
-echo '#####     Configuring non-root Access     #####'
-echo '###############################################'
-
-echo user: $SUDO_USER
-usermod -aG docker $SUDO_USER
-newgrp docker
-
 if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     echo '###############################################'
     echo '#####           Configure Proxy           #####'
@@ -56,3 +48,5 @@ if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     systemctl daemon-reload
     systemctl restart docker
 fi
+
+echo "to get non-root access, run 'sh /usr/bin/dockerd-rootless-setuptool.sh install' as a non-root user"
