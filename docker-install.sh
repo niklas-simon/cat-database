@@ -54,5 +54,10 @@ echo '#####      Configure non-root Access      #####'
 echo '###############################################'
 
 systemctl stop docker
+systemctl disable --now docker.service docker.socket
 runuser -u $SUDO_USER -- sh /usr/bin/dockerd-rootless-setuptool.sh install
-systemctl start docker
+runuser -u $SUDO_USER -- systemctl --user start docker
+runuser -u $SUDO_USER -- systemctl --user enable docker
+loginctl enable-linger $(whoami)
+runuser -u $SUDO_USER -- echo "export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock" >> $HOME/.bashrc
+docker context use rootless
