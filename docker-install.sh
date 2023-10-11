@@ -24,6 +24,13 @@ echo '###############################################'
 
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+echo '###############################################'
+echo '#####     Configuring non-root Access     #####'
+echo '###############################################'
+
+groupadd docker
+usermod -aG docker $USER
+
 if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     echo '###############################################'
     echo '#####           Configure Proxy           #####'
@@ -32,7 +39,8 @@ if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     wget https://raw.githubusercontent.com/niklas-simon/cat-database/main/docker-config.json
     sed s,{httpProxy},$(echo $http_proxy),g docker-config.json > config-1.json
     sed s,{httpsProxy},$(echo $https_proxy),g config-1.json > config.json
-    cp config.json /etc/docker/config.json
+    mkdir -p ~./.docker
+    cp config.json ~./.docker/config.json
     rm docker-config.json
     rm config-1.json
     rm config.json
@@ -40,7 +48,7 @@ if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     wget https://raw.githubusercontent.com/niklas-simon/cat-database/main/http-proxy.conf
     sed s,{httpProxy},$(echo $http_proxy),g http-proxy.conf > http-proxy-1.conf
     sed s,{httpsProxy},$(echo $https_proxy),g http-proxy-1.conf > http-proxy.conf
-    mkdir /etc/systemd/system/docker.service.d
+    mkdir -p /etc/systemd/system/docker.service.d
     cp http-proxy.conf /etc/systemd/system/docker.service.d/http-proxy.conf
     rm http-proxy.conf
     rm http-proxy-1.conf
