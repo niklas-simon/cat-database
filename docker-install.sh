@@ -36,4 +36,12 @@ if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     rm docker-config.json
     rm config-1.json
     rm config.json
+
+    wget https://raw.githubusercontent.com/niklas-simon/cat-database/main/http-proxy.conf
+    sed s,{httpProxy},$(echo $http_proxy),g http-proxy.conf > http-proxy-1.conf
+    sed s,{httpsProxy},$(echo $https_proxy),g http-proxy-1.conf > http-proxy.conf
+    mkdir /etc/systemd/system/docker.service.d
+    cp http-proxy.conf /etc/systemd/system/docker.service.d/http-proxy.conf
+    rm http-proxy.conf
+    rm http-proxy-1.conf
 fi
