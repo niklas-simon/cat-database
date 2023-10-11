@@ -53,4 +53,6 @@ echo '###############################################'
 echo '#####      Configure non-root Access      #####'
 echo '###############################################'
 
+systemctl stop docker
 runuser -u $SUDO_USER -- sh /usr/bin/dockerd-rootless-setuptool.sh install
+systemctl start docker
