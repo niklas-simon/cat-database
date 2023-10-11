@@ -28,9 +28,8 @@ echo '###############################################'
 echo '#####     Configuring non-root Access     #####'
 echo '###############################################'
 
-who am i
-getent group docker || groupadd docker
-usermod -aG docker $(who am i | awk '{print $1}')
+echo user: $SUDO_USER
+usermod -aG docker $SUDO_USER
 newgrp docker
 
 if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
