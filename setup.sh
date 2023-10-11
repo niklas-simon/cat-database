@@ -14,6 +14,9 @@ echo '##########################################'
 echo '#####     Building Cat-DB Image     ######'
 echo '##########################################'
 
+apt install git
+git clone https://github.com/niklas-simon/cat-database
+cd cat-database
 docker build -t cat-database .
 
 echo '##########################################'
