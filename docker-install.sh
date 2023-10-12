@@ -2,13 +2,14 @@ echo '###############################################'
 echo '#####          Install Packages           #####'
 echo '###############################################'
 
-apt-get install -y curl uidmap
+sudo apt update
+sudo apt install -y curl uidmap
 
 echo '###############################################'
 echo '#####           Install Docker            #####'
 echo '###############################################'
 
-wget -qO- https://raw.githubusercontent.com/docker/docker-install/master/install.sh | sh
+wget -qO- https://raw.githubusercontent.com/docker/docker-install/master/install.sh | sudo sh
 
 if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     echo '###############################################'
@@ -18,8 +19,8 @@ if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     wget https://raw.githubusercontent.com/niklas-simon/cat-database/main/docker-config.json
     sed s,{httpProxy},$(echo $http_proxy),g docker-config.json > config-1.json
     sed s,{httpsProxy},$(echo $https_proxy),g config-1.json > config.json
-    runuser -u $SUDO_USER -- mkdir -p $HOME/.docker
-    runuser -u $SUDO_USER -- cp config.json $HOME/.docker/config.json
+    mkdir -p $HOME/.docker
+    cp config.json $HOME/.docker/config.json
     rm docker-config.json
     rm config-1.json
     rm config.json
@@ -27,16 +28,16 @@ if [[ ! -z "${http_proxy}" || ! -z "${https_proxy}" ]]; then
     wget https://raw.githubusercontent.com/niklas-simon/cat-database/main/http-proxy.conf
     sed s,{httpProxy},$(echo $http_proxy),g http-proxy.conf > http-proxy-1.conf
     sed s,{httpsProxy},$(echo $https_proxy),g http-proxy-1.conf > http-proxy.conf
-    mkdir -p /etc/systemd/system/docker.service.d
-    cp http-proxy.conf /etc/systemd/system/docker.service.d/http-proxy.conf
+    sudo mkdir -p /etc/systemd/system/docker.service.d
+    sudo cp http-proxy.conf /etc/systemd/system/docker.service.d/http-proxy.conf
     rm http-proxy.conf
     rm http-proxy-1.conf
-    systemctl daemon-reload
-    systemctl restart docker
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
 fi
 
 echo '###############################################'
 echo '#####      Configure non-root Access      #####'
 echo '###############################################'
 
-wget -qO- https://raw.githubusercontent.com/docker/docker-install/master/rootless-install.sh | runuser -u $SUDO_USER -- sh
+wget -qO- https://raw.githubusercontent.com/docker/docker-install/master/rootless-install.sh | sh
