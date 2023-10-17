@@ -25,6 +25,8 @@ echo '############################################'
 cd /etc/
 git clone https://github.com/niklas-simon/cat-database
 cd /etc/cat-database
+npm config set proxy=$HTTP_PROXY
+npm config set https-proxy=$HTTPS_PROXY
 npm i
 
 echo '############################################'
