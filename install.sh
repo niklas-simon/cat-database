@@ -61,7 +61,7 @@ if cat /etc/environment | grep -q "proxy"; then
     for proxy in 'HTTP_PROXY' 'HTTPS_PROXY' 'NO_PROXY'; do
         proxyLC=$( tr '[:upper:]' '[:lower:]' <<< "$proxy" )
         confDaemon="${confDaemon}Environment=\"${proxy}=$( printenv $proxy )\"\n"
-        confClient="${confClient}\"${proxyLC}\":\"$( printenv $proxy )\"$( [[ proxy != 'NO_PROXY' ]] && echo "," )"
+        confClient="${confClient}\"${proxyLC}\":\"$( printenv $proxy )\"$( [[ $proxy != 'NO_PROXY' ]] && echo "," )"
     done
     echo -e "$confDaemon" > /etc/systemd/system/docker.service.d/http-proxy.conf
     echo "${confClient}}}}" > $USER_HOME/.docker/config.json
