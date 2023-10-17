@@ -119,7 +119,7 @@ ${head(isNew ? "New Cat" : cat?.name)}
             xhr.open("DELETE", p);
             xhr.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                window.location.replace("/");
+                    window.location.replace("/");
                 }
             };
             xhr.send();
@@ -143,8 +143,8 @@ ${head(isNew ? "New Cat" : cat?.name)}
                 <input type="file" accept=".png,.jpg,.jpeg" id="image" name="image" class="form-control">
                 ${error ? `<p class="text-danger">${error}</p>` : ``}
                 <div class="row align-items-end gap-3">
-                    <input type="submit" class="btn btn-outline-primary col g-3">
-                    ${cat?.id ? `<button onclick="deleteCat('/${cat.id}')" class="btn btn-outline-danger col g-3">delete</button>`: ''}
+                    <input type="submit" class="btn btn-outline-primary col g-3" value="save">
+                    ${cat?.id ? `<button type="button" onclick="deleteCat('/${cat.id}')" class="btn btn-outline-danger col g-3">delete</button>`: ''}
                 </div>
             </form>
         </div>
