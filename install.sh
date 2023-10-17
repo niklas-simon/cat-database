@@ -54,27 +54,28 @@ systemctl enable containerd.service
 if cat /etc/environment | grep -q "proxy"; then
     info "Proxy-Einstellungen übernehmen"
     mkdir -p /etc/systemd/system/docker.service.d
-	runuser -u ${SUDO_USER:-$USER} -- mkdir $HOME/.docker
+    USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
+    mkdir $USER_HOME/.docker
     confDaemon="[Service]\n"
-	confClient="{\"proxies\":{\"default\":{"
+    confClient="{\"proxies\":{\"default\":{"
     for proxy in 'HTTP_PROXY' 'HTTPS_PROXY' 'NO_PROXY'; do
-		proxyLC=$( tr '[:upper:]' '[:lower:]' <<< "$proxy" )
-		confDaemon="${confDaemon}Environment=\"${proxy}=$( printenv $proxy )\"\n"
-		confClient="${confClient}\"${proxyLC}\":\"$( printenv $proxy )\"$( [[ proxy != 'NO_PROXY' ]] && echo "," )"
-	done
-	echo -e "$confDaemon" > /etc/systemd/system/docker.service.d/http-proxy.conf
-	runuser -u ${SUDO_USER:-$USER} -- echo "${confClient}}}}" > $HOME/.docker/config.json
+        proxyLC=$( tr '[:upper:]' '[:lower:]' <<< "$proxy" )
+        confDaemon="${confDaemon}Environment=\"${proxy}=$( printenv $proxy )\"\n"
+        confClient="${confClient}\"${proxyLC}\":\"$( printenv $proxy )\"$( [[ $proxy != 'NO_PROXY' ]] && echo "," )"
+    done
+    echo -e "$confDaemon" > /etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "${confClient}}}}" > $USER_HOME/.docker/config.json
     chown -R $SUDO_USER $USER_HOME/.docker
-	systemctl daemon-reload
-	systemctl restart docker
+    systemctl daemon-reload
+    systemctl restart docker
 fi
 
 if [[ $1 = "-r" ]]; then
     reboot
 else
     info "Um Docker ohne root-Rechte nutzen zu können, müssen sie den Rechner neu starten."
-	read -p "Jetzt neu starten? (Y/N): " doReboot
-	if [[ $doReboot == [yY] || $doReboot == [jJ] || $doReboot == [yY][eE][sS] || $doReboot == [jJ][aA] ]]; then
-		reboot
-	fi
+    read -p "Jetzt neu starten? (Y/N): " doReboot
+    if [[ $doReboot == [yY] || $doReboot == [jJ] || $doReboot == [yY][eE][sS] || $doReboot == [jJ][aA] ]]; then
+        reboot
+    fi
 fi

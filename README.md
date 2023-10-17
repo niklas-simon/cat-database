@@ -34,7 +34,7 @@ docker run -dit --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_ROOT_HOST=% -e
 
 ### Build Image
 ```
-docker build -t cat-database .
+docker build -t cat-database --build-arg HTTP_PROXY=$HTTP_PROXY --build-arg HTTPS_PROXY=$HTTPS_PROXY .
 ```
 
 ### Run Image
