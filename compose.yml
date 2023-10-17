@@ -4,14 +4,12 @@ services:
   mysql:
     image: mysql
     restart: unless-stopped
-#    env_file: ./.env
+    env_file: ./.env
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=cats
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_DATABASE=$DB_NAME
     volumes:
       - data:/var/lib/mysql
-    networks:
-      - internal
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       interval: 10s
@@ -26,22 +24,16 @@ services:
         HTTP_PROXY: $HTTP_PROXY
         HTTPS_PROXY: $HTTPS_PROXY
     restart: unless-stopped
-#    env_file: ./.env
+    env_file: ./.env
     ports:
       - 80:80
     environment:
       - DB_HOST=mysql
       - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=cats
     stdin_open: true
     tty: true
     volumes:
       - images:/home/node/app/images
-    networks:
-      - internal
 volumes:
   data:
   images:
-networks:
-  internal:
