@@ -16,7 +16,7 @@ echo '##########################################'
 
 git clone https://github.com/niklas-simon/cat-database
 cd cat-database
-docker build -t cat-database .
+docker build -t cat-database --build-arg HTTP_PROXY=$HTTP_PROXY --build-arg HTTPS_PROXY=$HTTPS_PROXY .
 
 echo '##########################################'
 echo '#####   Starting Cat-DB Container   ######'

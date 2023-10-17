@@ -8,8 +8,8 @@ WORKDIR /home/node/app
 # copy package.json, package-lock.json to app directory
 COPY package*.json ./
 # set npm proxy settings
-RUN npm config set proxy=$HTTP_PROXY && \
-    npm config set https-proxy=$HTTPS_PROXY
+RUN npm config set proxy $HTTP_PROXY && \
+    npm config set https-proxy $HTTPS_PROXY
 # install nodejs dependencies
 RUN npm install
 # copy everything not in .dockerignore to app directory
