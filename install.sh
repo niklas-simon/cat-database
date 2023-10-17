@@ -64,6 +64,7 @@ if cat /etc/environment | grep -q "proxy"; then
 	done
 	echo -e "$confDaemon" > /etc/systemd/system/docker.service.d/http-proxy.conf
 	runuser -u ${SUDO_USER:-$USER} -- echo "${confClient}}}}" > $HOME/.docker/config.json
+    chown -R $SUDO_USER $USER_HOME/.docker
 	systemctl daemon-reload
 	systemctl restart docker
 fi
