@@ -19,13 +19,13 @@ err() {
 
 # Funktion zum installieren eines Paketes
 installPkg() {
-	# Nur installieren, falls noch nicht vorhanden oder aktualisierbar
-	task=""
-	if ! dpkg -l | grep -q " $1 "; then
+    # Nur installieren, falls noch nicht vorhanden oder aktualisierbar
+    task=""
+    if ! dpkg -l | grep -q " $1 "; then
         task="installiert"
-	elif apt list --upgradeable 2> /dev/null | grep -q " $1 "; then
+    elif apt list --upgradeable 2> /dev/null | grep -q " $1 "; then
         task="aktualisiert"
-	fi
+    fi
     if [[ $task != "" ]]; then
         info "Paket $1 wird ${task}"
         apt install $1 -y
@@ -38,9 +38,9 @@ installPkg() {
 
 # Funktion zum Sicherstellen, dass sudo verwendet wird
 ensureRoot() {
-	if [[ $EUID > 0 ]]; then
-		err "Rootrechte benötigt!\nAufruf: sudo $0"
-	fi
+    if [[ $EUID > 0 ]]; then
+        err "Rootrechte benötigt!\nAufruf: sudo $0"
+    fi
 }
 
 # Nutzung:
