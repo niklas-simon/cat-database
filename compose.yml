@@ -10,10 +10,19 @@ services:
       - MYSQL_DATABASE=$DB_NAME
     volumes:
       - data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      retries: 10
   cat-db:
     depends_on:
-      - mysql
-    build: ./
+      mysql:
+        condition: service_healthy
+    build:
+      context: .
+      args:
+        HTTP_PROXY: $HTTP_PROXY
+        HTTPS_PROXY: $HTTPS_PROXY
     restart: unless-stopped
     env_file: ./.env
     ports:
@@ -21,8 +30,6 @@ services:
     environment:
       - DB_HOST=mysql
       - DB_USER=root
-      - DB_PASSWORD=$DB_PASSWORD
-      - DB_NAME=$DB_NAME
     stdin_open: true
     tty: true
     volumes:

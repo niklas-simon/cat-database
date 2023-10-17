@@ -7,6 +7,9 @@ RUN mkdir -p /home/node/app/node_modules && mkdir -p /home/node/app/images && ch
 WORKDIR /home/node/app
 # copy package.json, package-lock.json to app directory
 COPY package*.json ./
+# set npm proxy settings
+RUN npm config set proxy=$HTTP_PROXY && \
+    npm config set https-proxy=$HTTPS_PROXY
 # install nodejs dependencies
 RUN npm install
 # copy everything not in .dockerignore to app directory
@@ -15,11 +18,6 @@ COPY --chown=node:node . .
 USER node
 # expose port 80 to outside of container
 EXPOSE 80
-# set environment variables
-ENV DB_HOST 172.17.0.1
-ENV DB_USER root
-ENV DB_PASSWORD root
-ENV DB_NAME cats
 
 # execute this when starting app
 CMD [ "node", "index.js" ]
