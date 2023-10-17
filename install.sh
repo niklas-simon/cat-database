@@ -71,5 +71,9 @@ fi
 if [[ $1 = "-r" ]]; then
     reboot
 else
-    info "Starten sie den Rechner neu, um Docker nutzen zu können"
+    info "Um Docker ohne root-Rechte nutzen zu können, müssen sie den Rechner neu starten."
+	read -p "Jetzt neu starten? (Y/N): " doReboot
+	if [[ $doReboot == [yY] || $doReboot == [jJ] || $doReboot == [yY][eE][sS] || $doReboot == [jJ][aA] ]]; then
+		reboot
+	fi
 fi

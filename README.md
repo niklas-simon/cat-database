@@ -11,8 +11,9 @@ DB_NAME     | Name of Database to use             | cats
 
 ## Docker Installation
 ```
-wget -qO- https://raw.githubusercontent.com/niklas-simon/cat-database/main/install.sh | bash
+wget -q https://raw.githubusercontent.com/niklas-simon/cat-database/main/common.sh && wget -q https://raw.githubusercontent.com/niklas-simon/cat-database/main/install.sh && sudo ./install.sh
 ```
+Nach der Installation muss der Rechner neugestartet werden, um Docker ohne root-Rechne nutzen zu können.
 
 ## Application installation
 ```
