@@ -16,9 +16,16 @@ else
         cat)
         # Beispiel von Niklas - cat-database
         info "Test: Katzen-Datenbank (c) Niklas Simon"
-        git clone http://niklas-simon/cat-database
-        docker compose -f cat-database/compose.yml up -d
-        result=$?
+		if [[ -f "compose.yml" && -f "Dockerfile" && -f "cat-db.service" ]]; then
+			# bereits im git-Verzeichnis -> Compose kann direkt gestartet
+			docker compose up -d
+			result=$?
+		else
+			# Dateien nicht vorhanden -> von git klonen & starten
+			git clone http://niklas-simon/cat-database
+			docker compose -f cat-database/compose.yml up -d
+			result=$?
+		fi
         ;;
         complex)
         err "TBA"
