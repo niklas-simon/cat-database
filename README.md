@@ -17,7 +17,7 @@ Nach der Installation muss der Rechner neugestartet werden, um Docker ohne root-
 
 ## Application installation
 ```
-wget -qO- https://raw.githubusercontent.com/niklas-simon/cat-database/main/setup.sh | sudo sh
+wget -qO- https://raw.githubusercontent.com/niklas-simon/cat-database/main/setup.sh | sh
 ```
 This does the following:
 ### Network Setup
