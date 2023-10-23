@@ -54,7 +54,7 @@ systemctl enable containerd.service
 if cat /etc/environment | grep -q "proxy"; then
     info "Proxy-Einstellungen übernehmen"
     mkdir -p /etc/systemd/system/docker.service.d
-    USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
+    USER_HOME=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
     mkdir $USER_HOME/.docker
     confDaemon="[Service]\n"
     confClient="{\"proxies\":{\"default\":{"
@@ -65,6 +65,7 @@ if cat /etc/environment | grep -q "proxy"; then
     done
     echo -e "$confDaemon" > /etc/systemd/system/docker.service.d/http-proxy.conf
     echo "${confClient}}}}" > $USER_HOME/.docker/config.json
+	chown -R ${SUDO_USER:-$USER} $USER_HOME/.docker
     systemctl daemon-reload
     systemctl restart docker
 fi
