@@ -17,10 +17,17 @@ testGit() {
 	cd $( dirname "${BASH_SOURCE[0]}" )
 	# Prüfen, ob man sich im benötigten git-Repo befindet
 	if ! git config --get remote.origin.url | grep -q "niklas-simon/cat-database"; then
-		info "Git-Repository wird geklont"
-		# Repo klonen und Verzeichnis wechseln
-		git clone https://github.com/niklas-simon/cat-database
-		cd cat-database
+		if [[ -d "cat-database" ]]; then
+			cd cat-database
+			if ! git config --get remote.origin.url | grep -q "niklas-simon/cat-database"; then
+				err "Verzeichnis cat-database existiert bereits, ist jedoch nicht das benötigte Git-Repository"
+			fi
+		else
+			info "Git-Repository wird geklont"
+			# Repo klonen und Verzeichnis wechseln
+			git clone https://github.com/niklas-simon/cat-database
+			cd cat-database
+		fi
 	fi
 	# Prüfen, auf welchem Branch man ist
 	if ! git rev-parse --abbrev-ref HEAD | grep -q "bernhard"; then
