@@ -46,7 +46,7 @@ fi
 usermod -aG docker ${SUDO_USER:-$USER}
 
 # Autostart für dockerd
-info "Autmoatische Ausführung des Docker Daemon einrichten"
+info "Automatische Ausführung des Docker Daemon einrichten"
 systemctl enable docker.service
 systemctl enable containerd.service
 
