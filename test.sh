@@ -1,5 +1,14 @@
 #!/usr/bin/bash
-# Aufruf mit sudo
+# Zweck: Verwawltung von Beispielanwendungen
+
+# Hilfe
+helpStr="Verwaltung von Beispielanwendungen
+Aufruf: $0 [Beispiel] [Optionen]
+Mögliche Beispiele: simple, complex
+Optionen:
+	-s | --stop		Stoppt die bereits laufenden Container der Beispiele
+	-k | --keep		Container werden nicht automatisch beendet, sondern laufen weiter.
+	-o | --open		(In Kombination mit -k) Öffnet Firefox auf localhost"
 
 # allgemeine Funktionen und Konstanten hinzufügen
 . "$( dirname "${BASH_SOURCE[0]}" )/common.sh"
@@ -68,7 +77,12 @@ if [[ $# = 0 ]]; then
     docker run hello-world
     result=$?
 else
-    case $1 in
+	# Variablen ermitteln
+	testName=$1
+	[[ $2 = '-s' || $2 = '--stop' ]] && stopTest="true" || stopTest="false" 
+	[[ $2 = '-k' || $2 = '--keep' ]] && killAfter="false" || killAfter="true" 
+	[[ $2 = '-o' || $2 = '--open' ]] && [[ $killAfter = "false" ]] && openBrowser="true" || openBrowser="false" 
+	case $testName in
         #------------------------------------#
 		# Beispiel von Niklas - cat-database #
         #------------------------------------#
@@ -76,7 +90,7 @@ else
         info "Test: Katzen-Datenbank (c) Niklas Pein"
 		testGit
 		# -s oder --stop um die Container zu stoppen
-		if [[ $# > 1 ]] && [[ $2 = '-s' || $2 = '--stop' ]]; then
+		if [[ $stopTest = "true" ]]; then
 			if ! docker container ls | grep -q "cat-service"; then
 				err "Container laufen nicht"
 			fi
@@ -110,12 +124,15 @@ else
 		docker run -d --name cat-service -p 80:80 -e DB_HOST=mysql -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped --network cat-net cat-service
 		# Ergebnis feststellen
 		getResult
-		# Container stoppen
-		if [[ $# < 2 ]] || [[ $2 != '-k' && $2 != '--keep' ]]; then
+		if [[ $killAfter = "true" ]]; then
+			# Container stoppen
 			info "Container werden gestoppt"
 			docker stop mysql
 			docker stop cat-service
 			docker container prune -f
+		elif [[ $openBrowser = "true" ]]; then
+			# -o bzw. --open: Firefox auf localhost öffnen
+			firefox localhost > /dev/null 2>&1 &
 		fi
         ;;
 		#------------------#
@@ -126,7 +143,7 @@ else
 		info "Test: Katzen-Datenbank v2 (c) Niklas Pein, Bernhard Lindner"
 		testGit
 		# -s oder --stop um die Container zu stoppen
-		if [[ $# > 1 ]] && [[ $2 = '-s' || $2 = '--stop' ]]; then
+		if [[ $stopTest = "true" ]]; then
 			info "Container werden gestoppt"
 			docker compose down
 			exit
@@ -139,17 +156,20 @@ else
 		docker compose up -d
 		# Ergebnis feststellen
 		getResult
-		# Container stoppen
-		if ! [[ $# > 1 ]] && [[ $2 = '-k' || $2 = '--keep' ]]; then
+		if [[ $killAfter = "true" ]]; then
+			# Container stoppen
 			info "Container werden gestoppt"
 			docker compose down
+		elif [[ $openBrowser = "true" ]]; then
+			# -o bzw. --open: Firefox auf localhost öffnen
+			firefox localhost > /dev/null 2>&1 &
 		fi
         ;;
 		#---------------------#
         # kein bekannter Test #
 		#---------------------#
         *)
-        err "Testfall $1 nicht bekannt"
+        err "Testfall ${testName} nicht bekannt"
         ;;
     esac
 fi

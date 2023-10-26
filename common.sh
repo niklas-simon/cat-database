@@ -38,10 +38,17 @@ installPkg() {
 
 # Funktion zum Sicherstellen, dass sudo verwendet wird
 ensureRoot() {
+	# prüfen der effektiven User ID
     if [[ $EUID > 0 ]]; then
         err "Rootrechte benötigt!\nAufruf: sudo $0"
     fi
 }
+
+# Automatische Hilfefunktion
+if [[ $helpStr != '' ]] && [[ $1 = '-h' || $1 = '--help' ]]; then
+	echo -e $helpStr
+	exit 0
+fi
 
 # Nutzung:
 # 1. Shell-skrpit inkludieren, Befehl:

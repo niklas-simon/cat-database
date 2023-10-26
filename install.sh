@@ -1,5 +1,12 @@
 #!/usr/bin/bash
+# Zweck: Installation und Konfiguration der Docker-Engine sowie Docker Compose
 # Aufruf mit sudo
+
+# Hilfe
+helpStr="Installationsskript für Docker
+Aufruf: $0 [-r|--reboot]
+Optionen:
+	-r | --reboot	Startet den Rechner neu, ohne nachzufragen"
 
 # allgemeine Funktionen und Konstanten hinzufügen
 . "$( dirname "${BASH_SOURCE[0]}" )/common.sh"
@@ -70,7 +77,7 @@ if cat /etc/environment | grep -q "proxy"; then
     systemctl restart docker
 fi
 
-if [[ $1 = "-r" ]]; then
+if [[ $1 = "-r" || $1 = "--reboot" ]]; then
     reboot
 else
     info "Um Docker ohne root-Rechte nutzen zu können, müssen sie den Rechner neu starten."
