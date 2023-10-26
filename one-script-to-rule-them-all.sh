@@ -1,4 +1,5 @@
 #!/bin/bash
+# Purpose: installing docker with Cat-DB Container
 
 # Konstanten für Ausgabe
 # Quelle: https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
@@ -21,13 +22,13 @@ err() {
 
 # Funktion zum installieren eines Paketes
 installPkg() {
-	# Nur installieren, falls noch nicht vorhanden oder aktualisierbar
-	task=""
-	if ! dpkg -l | grep -q " $1 "; then
+    # Nur installieren, falls noch nicht vorhanden oder aktualisierbar
+    task=""
+    if ! dpkg -l | grep -q " $1 "; then
         task="installed"
-	elif apt list --upgradeable 2> /dev/null | grep -q " $1 "; then
+    elif apt list --upgradeable 2> /dev/null | grep -q " $1 "; then
         task="updated"
-	fi
+    fi
     if [[ $task != "" ]]; then
         info "$1 will be ${task}"
         apt install $1 -y
@@ -40,9 +41,9 @@ installPkg() {
 
 # Funktion zum Sicherstellen, dass sudo verwendet wird
 ensureRoot() {
-	if [[ $EUID > 0 ]]; then
-		err "this script needs root permissions!\nRun with 'sudo $0'"
-	fi
+    if [[ $EUID > 0 ]]; then
+        err "this script needs root permissions!\nRun with 'sudo $0'"
+    fi
 }
 
 # Sicherstellen, dass mit sudo ausgeführt wird
@@ -95,19 +96,19 @@ systemctl enable containerd.service
 if cat /etc/environment | grep -q "proxy"; then
     info "applying proxy settings"
     mkdir -p /etc/systemd/system/docker.service.d
-	runuser -u ${SUDO_USER:-$USER} -- mkdir $HOME/.docker
+    runuser -u ${SUDO_USER:-$USER} -- mkdir $HOME/.docker
     confDaemon="[Service]\n"
-	confClient="{\"proxies\":{\"default\":{"
+    confClient="{\"proxies\":{\"default\":{"
     for proxy in 'HTTP_PROXY' 'HTTPS_PROXY' 'NO_PROXY'; do
-		proxyLC=$( tr '[:upper:]' '[:lower:]' <<< "$proxy" )
-		confDaemon="${confDaemon}Environment=\"${proxy}=$( printenv $proxy )\"\n"
-		confClient="${confClient}\"${proxyLC}\":\"$( printenv $proxy )\"$( [[ proxy != 'NO_PROXY' ]] && echo "," )"
-	done
-	echo -e "$confDaemon" > /etc/systemd/system/docker.service.d/http-proxy.conf
-	runuser -u ${SUDO_USER:-$USER} -- echo "${confClient}}}}" > $HOME/.docker/config.json
+        proxyLC=$( tr '[:upper:]' '[:lower:]' <<< "$proxy" )
+        confDaemon="${confDaemon}Environment=\"${proxy}=$( printenv $proxy )\"\n"
+        confClient="${confClient}\"${proxyLC}\":\"$( printenv $proxy )\"$( [[ proxy != 'NO_PROXY' ]] && echo "," )"
+    done
+    echo -e "$confDaemon" > /etc/systemd/system/docker.service.d/http-proxy.conf
+    runuser -u ${SUDO_USER:-$USER} -- echo "${confClient}}}}" > $HOME/.docker/config.json
     chown -R $SUDO_USER $USER_HOME/.docker
-	systemctl daemon-reload
-	systemctl restart docker
+    systemctl daemon-reload
+    systemctl restart docker
 fi
 
 info "creating virtual network"
@@ -128,8 +129,8 @@ if [[ $1 = "-r" ]]; then
     reboot
 else
     info "system reboot is required to utilize docker without root permissions"
-	read -p "Restart now? (y/N): " doReboot
-	if [[ $doReboot == [yY] || $doReboot == [jJ] || $doReboot == [yY][eE][sS] || $doReboot == [jJ][aA] ]]; then
-		reboot
-	fi
+    read -p "Restart now? (y/N): " doReboot
+    if [[ $doReboot == [yY] || $doReboot == [jJ] || $doReboot == [yY][eE][sS] || $doReboot == [jJ][aA] ]]; then
+        reboot
+    fi
 fi
