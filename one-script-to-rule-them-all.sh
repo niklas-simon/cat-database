@@ -46,6 +46,19 @@ ensureRoot() {
     fi
 }
 
+#!/usr/bin/bash
+# Zweck: Installation und Konfiguration der Docker-Engine sowie Docker Compose
+# Aufruf mit sudo
+
+# Hilfe
+helpStr="Docker Installation Script\n
+Usage: $0 [-r|--reboot]\n
+Options:\n
+	-r | --reboot	reboots after finishing without asking"
+
+# allgemeine Funktionen und Konstanten hinzufügen
+. "$( dirname "${BASH_SOURCE[0]}" )/common.sh"
+
 # Sicherstellen, dass mit sudo ausgeführt wird
 ensureRoot
 
@@ -96,17 +109,18 @@ systemctl enable containerd.service
 if cat /etc/environment | grep -q "proxy"; then
     info "applying proxy settings"
     mkdir -p /etc/systemd/system/docker.service.d
-    runuser -u ${SUDO_USER:-$USER} -- mkdir $HOME/.docker
+    USER_HOME=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
+    mkdir $USER_HOME/.docker
     confDaemon="[Service]\n"
     confClient="{\"proxies\":{\"default\":{"
     for proxy in 'HTTP_PROXY' 'HTTPS_PROXY' 'NO_PROXY'; do
         proxyLC=$( tr '[:upper:]' '[:lower:]' <<< "$proxy" )
         confDaemon="${confDaemon}Environment=\"${proxy}=$( printenv $proxy )\"\n"
-        confClient="${confClient}\"${proxyLC}\":\"$( printenv $proxy )\"$( [[ proxy != 'NO_PROXY' ]] && echo "," )"
+        confClient="${confClient}\"${proxyLC}\":\"$( printenv $proxy )\"$( [[ $proxy != 'NO_PROXY' ]] && echo "," )"
     done
     echo -e "$confDaemon" > /etc/systemd/system/docker.service.d/http-proxy.conf
-    runuser -u ${SUDO_USER:-$USER} -- echo "${confClient}}}}" > $HOME/.docker/config.json
-    chown -R $SUDO_USER $USER_HOME/.docker
+    echo "${confClient}}}}" > $USER_HOME/.docker/config.json
+	chown -R ${SUDO_USER:-$USER} $USER_HOME/.docker
     systemctl daemon-reload
     systemctl restart docker
 fi
@@ -125,12 +139,13 @@ docker build -t cat-database .
 info "starting Cat-DB container"
 docker run -dit --name cat-db -p 80:80 -e DB_HOST=mysql -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped --network cat-net cat-database
 
-if [[ $1 = "-r" ]]; then
+if [[ $1 = "-r" || $1 = "--reboot" ]]; then
     reboot
 else
-    info "system reboot is required to utilize docker without root permissions"
-    read -p "Restart now? (y/N): " doReboot
+    info "system reboot required to run docker without root permissions"
+    read -p "reboot now? (y/N): " doReboot
     if [[ $doReboot == [yY] || $doReboot == [jJ] || $doReboot == [yY][eE][sS] || $doReboot == [jJ][aA] ]]; then
         reboot
     fi
 fi
+
