@@ -2,12 +2,12 @@
 # Zweck: Verwawltung von Beispielanwendungen
 
 # Hilfe
-helpStr="Verwaltung von Beispielanwendungen
-Aufruf: $0 [Beispiel] [Optionen]
-Mögliche Beispiele: simple, complex
-Optionen:
-	-s | --stop		Stoppt die bereits laufenden Container der Beispiele
-	-k | --keep		Container werden nicht automatisch beendet, sondern laufen weiter.
+helpStr="Verwaltung von Beispielanwendungen\n
+Aufruf: $0 [Beispiel] [Optionen]\n
+Mögliche Beispiele: simple, complex\n
+Optionen:\n
+	-s | --stop		Stoppt die bereits laufenden Container der Beispiele\n
+	-k | --keep		Container werden nicht automatisch beendet, sondern laufen weiter.\n
 	-o | --open		(In Kombination mit -k) Öffnet Firefox auf localhost"
 
 # allgemeine Funktionen und Konstanten hinzufügen

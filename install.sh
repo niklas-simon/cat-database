@@ -3,9 +3,9 @@
 # Aufruf mit sudo
 
 # Hilfe
-helpStr="Installationsskript für Docker
-Aufruf: $0 [-r|--reboot]
-Optionen:
+helpStr="Installationsskript für Docker\n
+Aufruf: $0 [-r|--reboot]\n
+Optionen:\n
 	-r | --reboot	Startet den Rechner neu, ohne nachzufragen"
 
 # allgemeine Funktionen und Konstanten hinzufügen
