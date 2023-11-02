@@ -134,7 +134,7 @@ docker run -dit --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_ROOT_HOST=% -e
 info "building Cat-DB image"
 git clone https://github.com/niklas-simon/cat-database
 cd cat-database
-docker build -t cat-database .
+docker build -t cat-database --build-arg HTTP_PROXY=$HTTP_PROXY --build-arg HTTPS_PROXY=$HTTPS_PROXY .
 
 info "starting Cat-DB container"
 docker run -dit --name cat-db -p 80:80 -e DB_HOST=mysql -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped --network cat-net cat-database
