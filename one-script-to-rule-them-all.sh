@@ -54,7 +54,7 @@ ensureRoot() {
 helpStr="Docker Installation Script\n
 Usage: $0 [-r|--reboot]\n
 Options:\n
-	-r | --reboot	reboots after finishing without asking"
+    -r | --reboot	reboots after finishing without asking"
 
 # allgemeine Funktionen und Konstanten hinzufügen
 . "$( dirname "${BASH_SOURCE[0]}" )/common.sh"
@@ -120,7 +120,7 @@ if cat /etc/environment | grep -q "proxy"; then
     done
     echo -e "$confDaemon" > /etc/systemd/system/docker.service.d/http-proxy.conf
     echo "${confClient}}}}" > $USER_HOME/.docker/config.json
-	chown -R ${SUDO_USER:-$USER} $USER_HOME/.docker
+    chown -R ${SUDO_USER:-$USER} $USER_HOME/.docker
     systemctl daemon-reload
     systemctl restart docker
 fi
