@@ -49,10 +49,14 @@ ensureRoot() {
 # Sicherstellen, dass mit sudo ausgeführt wird
 ensureRoot
 
+info "updating package list"
+
 apt update
+
+info "installing or upgrading firefox if required"
 
 installPkg firefox
 
 info "opening new tab to http://localhost/"
 
-firefox --new-tab "http://localhost/"
+runuser -u $SUDO_USER -- firefox --new-tab "http://localhost/"
