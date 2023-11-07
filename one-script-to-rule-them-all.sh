@@ -56,9 +56,6 @@ Usage: $0 [-r|--reboot]\n
 Options:\n
     -r | --reboot	reboots after finishing without asking"
 
-# allgemeine Funktionen und Konstanten hinzufügen
-. "$( dirname "${BASH_SOURCE[0]}" )/common.sh"
-
 # Sicherstellen, dass mit sudo ausgeführt wird
 ensureRoot
 
