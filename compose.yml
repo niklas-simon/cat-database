@@ -1,20 +1,6 @@
 version: '3.8'
 
 services:
-  samba:
-    image: dperson/samba
-    restart: unless-stopped
-    volumes:
-      - images:/srv/samba/cats
-    command: ["-p"]
-    networks:
-      - backend
-    environment:
-      - USER="${SAMBA_USER};${SAMBA_PASSWORD}"
-      - SHARE="${SHARE_NAME};/srv/samba/cats;no;no;no;${SAMBA_USER}"
-    healthcheck:
-      test: ["CMD", "smbclient", "-L", "\\localhost", "-U", "%", "-m", "SMB3"]
-      interval: 10s
   mysql:
     image: mysql
     restart: unless-stopped
@@ -26,16 +12,9 @@ services:
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       interval: 10s
-    networks:
-      backend:
-        aliases:
-          - authdb
-          - catdb
   cat-service:
     depends_on:
       mysql:
-        condition: service_healthy
-      samba:
         condition: service_healthy
     build:
       context: cat-service
@@ -44,54 +23,17 @@ services:
         HTTPS_PROXY: $HTTPS_PROXY
     restart: unless-stopped
     environment:
-      - DB_HOST=catdb
+      - DB_HOST=mysql
       - DB_USER=root
       - DB_PASSWORD=$DB_PASSWORD
       - DB_NAME=$DB_NAME
     healthcheck:
       test: ["CMD", "curl", "localhost"]
       interval: 10s
-    networks:
-      - backend
-      - frontend
-  auth:
-    build: auth
-    depends_on:
-      mysql:
-        condition: service_healthy
-    networks:
-      - frontend
-      - backend
-    restart: unless-stopped
-  wrapper:
-    build: wrapper
-    depends_on:
-      cat-service:
-        condition: service_healthy
-      mysql:
-        condition: service_healthy
-    restart: unless-stopped
-    networks:
-      - frontend
-      - backend
-  krakend:
-    depends_on:
-      auth:
-        condition: service_healthy
-      cat-service:
-        condition: service_healthy
-    image: devopsfaith/krakend
-    restart: unless-stopped
-    networks:
-      - frontend
     ports:
       - 80:80
+    volumes:
+      - images:/home/node/app/images
 volumes:
-  db_data:
+  data:
   images:
-config:
-  krakend:
-  init_sql:
-networks:
-  frontend:
-  backend:
