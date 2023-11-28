@@ -20,7 +20,7 @@ if  [[ ! -f "/etc/apt/sources.list.d/docker.list" ]]; then
     # Add Docker's official GPG key:
     # Quelle: https://docs.docker.com/engine/install/ubuntu/
     apt update
-    for pkg in 'install' 'ca-certificates' 'curl' 'gnupg'; do
+    for pkg in 'ca-certificates' 'curl' 'gnupg'; do
         installPkg $pkg
     done
     install -m 0755 -d /etc/apt/keyrings

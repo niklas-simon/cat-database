@@ -35,39 +35,39 @@ header() {
     # Text speichern 
     l_text=$1
     shift 1
-	# Standardwerte setzen
+    # Standardwerte setzen
     l_type=0
     l_frameCol=blue
     l_textCol=frame
-	# Parameter verabeiten
+    # Parameter verabeiten
     while [[ $# > 0 ]]; do
         case $1 in
-		    # Parameter Typ
+            # Parameter Typ
             -t|--type)
             l_type=$2
             shift 2
             ;;
-			# Parameter Rahmenfarbe
+            # Parameter Rahmenfarbe
             -f|--frameCol)
             l_frameCol=$2
             shift 2
             ;;
-			# Parameter Textfarbe
+            # Parameter Textfarbe
             -c|--textCol)
             l_textCol=$2
             shift 2
             ;;
             *)
-			# Unbekannter Parameter
+            # Unbekannter Parameter
             shift 1
             ;;
         esac
     done
-	# Prüfen, dass sinnvolle werte als Parameter angegeben wurden
-	[[ -z ${colors[$l_frameCol]} ]] && l_frameCol=blue
-	[[ -z ${colors[$l_textCol]} ]] && l_textCol=$l_frameCol
-	[[ 0 > $l_type || $l_type > 2 ]] && l_type=0
-	# Texte erzeugen
+    # Prüfen, dass sinnvolle werte als Parameter angegeben wurden
+    [[ -z ${colors[$l_frameCol]} ]] && l_frameCol=blue
+    [[ -z ${colors[$l_textCol]} ]] && l_textCol=$l_frameCol
+    [[ 0 > $l_type || $l_type > 2 ]] && l_type=0
+    # Texte erzeugen
     botTop="${border[$l_type,0]}$( echo " $l_text " | sed s/./${border[$l_type,1]}/g )${border[$l_type,0]}"
     midLog="${border[$l_type,2]} $l_text $( echo "${border[$l_type,2]}" | rev )"
     midCol="${border[$l_type,2]}${colors[$l_textCol]} $l_text ${colors[$l_frameCol]}$( echo "${border[$l_type,2]}" | rev )"
@@ -144,12 +144,15 @@ fi
 # Log-Datei als Parameter
 if [[ $1 = '--logFile' ]]; then
     logFile=$2
-	shift 2
+    shift 2
 fi
 
 # Erstellen der Log-Datei
 if ! [[ -z $logFile || -f $logFile ]]; then
-	touch $logFile
+    touch $logFile
+    if [[ $EUID = 0 ]]; then
+        chown ${SUDO_USER:-$USER}:${SUDO_USER:-$USER} $logFile
+    fi
 fi
 
 # Nutzung:
