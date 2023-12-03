@@ -141,6 +141,18 @@ if [[ $helpStr != '' ]] && [[ $1 = '-h' || $1 = '--help' ]]; then
     exit 0
 fi
 
+# Funny
+if [[ $1 = '--unfunny' ]]; then
+    shift 1
+else
+    if [[ ${SUDO_USER:-$USER} = 'mat' ]]; then
+        info "Ähh... Dodelido"
+    else
+        info "Why does the image go to jail?"
+        warn "Because it was framed"
+    fi
+fi
+
 # Log-Datei als Parameter
 if [[ $1 = '--logFile' ]]; then
     logFile=$2
@@ -153,6 +165,7 @@ if ! [[ -z $logFile || -f $logFile ]]; then
     if [[ $EUID = 0 ]]; then
         chown ${SUDO_USER:-$USER}:${SUDO_USER:-$USER} $logFile
     fi
+    info "Log-Datei $logFile erstellt"
 fi
 
 # Nutzung:
