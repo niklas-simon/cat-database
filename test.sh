@@ -136,7 +136,7 @@ else
         fi
         # cat-service Container aus erstelltem Image starten
         info "Container aus eigenem Image starten"
-        docker run -d --name cat-service -p 80:80 -e DB_HOST=mysql -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped --network cat-net cat-service
+        docker run -d --name cat-service -p 8088:80 -e DB_HOST=mysql -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped --network cat-net cat-service
         # Ergebnis feststellen
         getResult
         if [[ $killAfter = 'true' ]]; then
