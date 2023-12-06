@@ -23,11 +23,11 @@ testGit() {
     # sicherstellen, dass git installiert ist
     installPkg git
     # in Verzeichnis mit Skripten wechseln
-    cd $( dirname "${BASH_SOURCE[0]}" )
+    cd $( dirname "${BASH_SOURCE[0]}" ) || err "Verzeichnis konnte nicht gewechselt werden"
     # Prüfen, ob man sich im benötigten git-Repo befindet
     if ! git config --get remote.origin.url | grep -q "niklas-simon/cat-database"; then
         if [[ -d "cat-database" ]]; then
-            cd cat-database
+            cd cat-database || err "Verzeichnis konnte nicht gewechselt werden"
             if ! git config --get remote.origin.url | grep -q "niklas-simon/cat-database"; then
                 err "Verzeichnis cat-database existiert bereits, ist jedoch nicht das benötigte Git-Repository"
             fi
@@ -35,7 +35,7 @@ testGit() {
             info "Git-Repository wird geklont"
             # Repo klonen und Verzeichnis wechseln
             git clone https://github.com/niklas-simon/cat-database
-            cd cat-database
+            cd cat-database || err "Verzeichnis konnte nicht gewechselt werden"
         fi
     fi
     # Prüfen, auf welchem Branch man ist
@@ -50,11 +50,11 @@ getResult() {
     maxTries=5
     info "Versuche: $maxTries"
     retry=0
-    curl localhost > /dev/null 2>&1
+    curl "localhost:$port" > /dev/null 2>&1
     result=$?
     while [[ $retry < $maxTries && $result != 0 ]]; do
         sleep 3
-        curl localhost > /dev/null 2>&1
+        curl "localhost:$port" > /dev/null 2>&1
         result=$?
         if [[ $result != 0 ]]; then
             info "Versuch $retry fehlgeschlagen ..."
@@ -83,6 +83,7 @@ else
     stopTest='false'
     killAfter='true'
     openBrowser='false'
+    port='8080'
     while [[ $# > 0 ]]; do
         case $1 in
             -s|--stop)
@@ -93,6 +94,10 @@ else
             ;;
             -o|--open)
             openBrowser='true'
+            ;;
+            -p|--port)
+            [[ $2 > 0 && $2 < 65536 ]] && port=$2
+            shift 1
             ;;
         esac
         shift 1
@@ -136,7 +141,7 @@ else
         fi
         # cat-service Container aus erstelltem Image starten
         info "Container aus eigenem Image starten"
-        docker run -d --name cat-service -p 8088:80 -e DB_HOST=mysql -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped --network cat-net cat-service
+        docker run -d --name cat-service -p $port:80 -e DB_HOST=mysql -e DB_USER=root -e DB_PASSWORD=root -e DB_NAME=cats -v images:/home/node/app/images --restart unless-stopped --network cat-net cat-service
         # Ergebnis feststellen
         getResult
         if [[ $killAfter = 'true' ]]; then
@@ -147,7 +152,7 @@ else
             docker container prune -f
         elif [[ $openBrowser = 'true' ]]; then
             # -o bzw. --open: Firefox auf localhost öffnen
-            firefox localhost > /dev/null 2>&1 &
+            firefox "localhost:$port" > /dev/null 2>&1 &
         fi
         ;;
         #------------------#
@@ -166,6 +171,8 @@ else
         if docker container ls | grep -q "cat-service"; then
             err "Container laufen bereits"
         fi
+        # Port setzen
+        sed -i "s|- [0-9]+:80|- $port:80|" compose.yml
         # Container starten
         docker compose up -d
         # Ergebnis feststellen
@@ -176,7 +183,7 @@ else
             docker compose down
         elif [[ $openBrowser = 'true' ]]; then
             # -o bzw. --open: Firefox auf localhost öffnen
-            firefox localhost > /dev/null 2>&1 &
+            firefox "localhost:$port" > /dev/null 2>&1 &
         fi
         ;;
         #---------------------#
