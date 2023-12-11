@@ -6,21 +6,24 @@
 # Quelle: https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
 declare -A colors=( [none]='\033[0m' [red]='\033[0;31m' [green]='\033[0;32m' [yellow]='\033[0;93m' [blue]='\033[0;34m' [orange]='\033[0;33m' )
 
+# Um die gesamte Ausgabe farbig zu machen, muss die Variable fullColor nicht leer deklariert werden, z.B. über
+# fullColor=true
+
 # Funktion für Informative Ausgabe
 info() {
-    echo -e "${colors[green]}*>${colors[none]} $1"
+    [[ -z $fullColor ]] && echo -e "${colors[green]}*>${colors[none]} $1" || echo -e "${colors[green]}*> $1${colors[none]}"
     [[ -w $logFile ]] && echo "$( date "+%T" ) [INFO] $1" >> $logFile
 }
 
 # Funktion für Warnungen
 warn() {
-    echo -e "${colors[yellow]}*>${colors[none]} $1"
+    [[ -z $fullColor ]] && echo -e "${colors[yellow]}*>${colors[none]} $1" || echo -e "${colors[yellow]}*> $1${colors[none]}"
     [[ -w $logFile ]] && echo "$( date "+%T" ) [WARN] $1" >> $logFile
 }
 
 # Funktion für Fehler
 err() {
-    echo -e "${colors[red]}*>${colors[none]} $1"
+    [[ -z $fullColor ]] && echo -e "${colors[red]}*>${colors[none]} $1" || echo -e "${colors[red]}*> $1${colors[none]}"
     [[ -w $logFile ]] && echo "$( date "+%T" ) [ERR]  $1" >> $logFile
     exit 1
 }
